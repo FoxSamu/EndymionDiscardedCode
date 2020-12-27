@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "endymion:lumrud_planks"
+    }
+  },
+  "result": {
+    "item": "endymion:lumrud_slab",
+    "count": 6
+  }
+}

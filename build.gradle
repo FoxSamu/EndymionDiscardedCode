@@ -1,0 +1,190 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://maven.tterrag.com/"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+        maven { url = 'https://dist.creeper.host/Sponge/maven' }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.5"
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+// We edited above this line ... Forge explodes!
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: "com.dorongold.task-tree"
+apply plugin: "net.shadew.endymion.gradle"
+
+mixin {
+    add sourceSets.main, "mixin.endymion.refmap.json"
+}
+
+version = '1.0'
+group = 'net.shadew.endymion'
+archivesBaseName = 'endymion'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+endymion {
+    shade('net.shadew.ptg', 'endymion.net.shadew.ptg')
+
+    changelogJson file("$rootDir/changelog.json")
+    updateJson file('versioninfo/update.json')
+    markdownChangelog file('versioninfo/latest_changelog.md')
+    markdownChangelog file("versioninfo/${changelogInfo.versionNumber}_changelog.md")
+
+//    constant('mod_id', project.ext.modid)
+//    constant('mod_name', project.ext.implName)
+//    constant('version', changelogInfo.versionNumber)
+//    constant('version_name', changelogInfo.versionName)
+//    constant('group', project.group)
+//    constant('build_time', project.ext.timeOfExecution)
+//    constant('sha1') {
+//        !project.canJarBeSigned() ? "NO:FI:NG:ER:PR:IN:TA:VA:IL:AB:LE" : project.getProjectFingerprint()
+//    }
+}
+
+minecraft {
+    mappings channel: 'snapshot', version: '20200922-mixed-1.16.3'
+    accessTransformer = file("${project.projectDir}/src/main/resources/META-INF/accesstransformer.cfg")
+
+    runs {
+        client {
+            workingDirectory file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'info'
+            property 'mixin.env.disableRefMap', 'true'
+
+            mods {
+                endymion {
+                    source((SourceSet) sourceSets.main)
+                }
+            }
+        }
+
+        server {
+            workingDirectory file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'info'
+            property 'mixin.env.disableRefMap', 'true'
+
+            mods {
+                endymion {
+                    source((SourceSet) sourceSets.main)
+                }
+            }
+        }
+
+        data {
+            workingDirectory file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'info'
+            property 'mixin.env.disableRefMap', 'true'
+
+            args '--mod', 'nethertests', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                endymion {
+                    source((SourceSet) sourceSets.main)
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    maven {
+        url "http://maven.shadew.net/"
+    }
+    maven {
+        url "https://maven.tterrag.com/"
+    }
+}
+
+configurations {
+    include
+    implementation.extendsFrom(include)
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
+    include 'net.shadew:ptg:1.2.2'
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title"     : "endymion",
+            "Specification-Vendor"    : "shadew",
+            "Specification-Version"   : "1",
+            "Implementation-Title"    : project.name,
+            "Implementation-Version"  : "${version}",
+            "Implementation-Vendor"   : "shadew",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConnector"          : "endymion.util.MixinConnector"
+        ]
+        )
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+task genData(type: JavaExec) {
+    dependsOn 'compileJava'
+
+    // We must give the classpath as a raw path, otherwise gradle adds :classes as a dependency to this task. Since we
+    // are a dependency of :classes itself this causes a circular dependency and therefore we must not have :classes as
+    // dependency. Make sure not to use 'sourceSets.main.runtimeClasspath' or something relevant here
+    classpath files("$buildDir/classes/java/main") + configurations.runtime
+
+    main "endymion.data.DataGen"
+    args(
+        "--all",
+        "--output", "$projectDir/src/gen/resources",
+        "--gameDir", "."
+    )
+    workingDir file("$rootDir/run")
+}
+
+processResources {
+    dependsOn 'genData'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir file("$projectDir/src/gen/resources")
+        }
+    }
+}
+
+task makeVersionInfo() {
+    dependsOn updateVersionJson
+    dependsOn genChangelogMarkdown
+}

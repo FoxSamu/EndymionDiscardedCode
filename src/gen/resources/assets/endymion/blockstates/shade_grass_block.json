@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "endymion:block/shade_grass_block"
+      },
+      {
+        "model": "endymion:block/shade_grass_block",
+        "y": 90
+      },
+      {
+        "model": "endymion:block/shade_grass_block",
+        "y": 180
+      },
+      {
+        "model": "endymion:block/shade_grass_block",
+        "y": 270
+      }
+    ]
+  }
+}

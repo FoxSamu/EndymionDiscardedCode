@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "endymion:block/shade_dirt",
+    "top": "endymion:block/shade_grass_block_top",
+    "side": "endymion:block/shade_grass_block_side"
+  }
+}

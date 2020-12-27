@@ -1,0 +1,14 @@
+{
+  "package": "endymion.mixin",
+  "mixins": [
+    "DimensionGeneratorSettingsMixin",
+    "DimensionTypeMixin",
+    "EndBiomeProviderMixin",
+    "EndermanEntityMixin",
+    "NoiseChunkGeneratorMixin"
+  ],
+  "required": true,
+  "setSourceFile": true,
+  "refmap": "mixin.endymion.refmap.json",
+  "minVersion": "0.8.1"
+}

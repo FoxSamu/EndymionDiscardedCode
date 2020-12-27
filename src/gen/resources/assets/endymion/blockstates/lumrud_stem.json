@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "endymion:block/lumrud_stem",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "endymion:block/lumrud_stem",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "endymion:block/lumrud_stem"
+    }
+  }
+}

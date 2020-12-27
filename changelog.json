@@ -1,0 +1,14 @@
+{
+  "version": {
+    "number": "0.1-beta.0",
+    "name": "Endymion: First release",
+    "minecraft": "1.16.3",
+    "stable": false
+  },
+  "description": [
+    "Endymion: First release"
+  ],
+  "changelog": [
+    "First release"
+  ]
+}

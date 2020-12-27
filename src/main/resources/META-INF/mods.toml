@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[34,)"
+license = "All rights reserved"
+# issueTrackerURL = "..."
+
+[[mods]]
+modId = "endymion"
+version = "${file.jarVersion}"
+displayName = "Endymion"
+# updateJSONURL = "..."
+# displayURL = "..."
+# logoFile = "..."
+credits = "By Shadew"
+authors = "Shadew"
+description = '''
+ENDYMION - An ender expansion mod for Minecraft 1.16.3
+'''
+
+[[dependencies.endymion]]
+modId = "forge"
+mandatory = true
+versionRange = "[34,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.endymion]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.16.3]"
+ordering = "NONE"
+side = "BOTH"

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "endymion:block/stripped_lumrud_stem_top",
+    "side": "endymion:block/stripped_lumrud_stem"
+  }
+}

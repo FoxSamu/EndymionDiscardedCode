@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "endymion:shade_dirt",
+    "endymion:shade_grass_block",
+    "endymion:shalimon",
+    "endymion:flowered_shalimon",
+    "endymion:end_roots"
+  ]
+}
